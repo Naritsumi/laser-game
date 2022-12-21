@@ -2,7 +2,6 @@
 HTML5 Canvas and JavaScript Game
 
 - [X] Create player
-- [ ] Create proyectiles
+- [X] Create proyectiles
+- [ ] Create enemies
 - [ ] Collision and hits
-- [ ] 
-- [ ] 
