@@ -81,7 +81,6 @@ class Enemy{
     }
 }
 
-
 // Debemos indicar las coordenadas
 const x = canvas.width / 2
 const y = canvas.height / 2
@@ -89,25 +88,70 @@ const y = canvas.height / 2
 // Parámetros para el constructor jugador
 const player = new Player(x, y, 30, 'blue')
 
-// Array para un grupo de proyectiles
+// Array para un grupo de proyectiles / enemigos
 // y los recorrerá
 // (múltiples instancias)
 const projectiles = []
+const enemies = []
 
-/*
-function spawnEnemies(){
-
+// All enemies
+function spawnEnemies() {
+    setInterval(() => {
+      // Radio del enemigo min - max => 25 - 35
+      const radius = Math.random() * (30 - 5) + 5;
+      let x;
+      let y;
+      // Random spawn de enemigos
+      if (Math.random() < 0.5) {
+        // Si spawnea izquierda o derecha
+        x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
+        y = Math.random() * canvas.height
+      } else {
+        x = Math.random() * canvas.width
+        // Si spawnea arriba o abajo
+        y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
+      }
+  
+      const color = 'green';
+  
+      // Ángulo desde el centro del canvas al cursor
+       const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
+  
+      // const power = 1;
+  
+      const velocity = {
+        x: Math.cos(angle),
+        y: Math.sin(angle)
+      }
+  
+      enemies.push(new Enemy(x, y, radius, color, velocity));
+    }, 1000) //1 seg
 }
-*/
-
+  
 function animate(){
     requestAnimationFrame(animate)   
     // Para evitar llenar el canvas de proyectiles
     c.clearRect(0, 0, canvas.width, canvas.height)    
     player.draw()
-    projectiles.forEach(projectile =>
-        {
+    projectiles.forEach((projectile) => {
             projectile.update() 
+        })
+
+    enemies.forEach((enemy, enemyIndex) => {
+            enemy.update() 
+
+            projectiles.forEach((projectile, projectileIndex) => {
+                // Distancia entre dos puntos
+                const distance = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
+
+                if (distance - enemy.radius - projectile.radius < 1){
+                    setTimeout(() => {
+                    // Eliminamos los items colisionados de cada array
+                    enemies.splice(enemyIndex, 1)
+                    projectiles.splice(projectileIndex, 1)
+                    }, 0)                  
+                }
+            })
         })
 }
 
@@ -132,3 +176,4 @@ addEventListener('click', (event) => {
 })
 
 animate()
+spawnEnemies()
