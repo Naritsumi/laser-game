@@ -6,6 +6,9 @@ canvas.width = innerWidth
 canvas.height = innerHeight
 
 const scoreElement = document.querySelector('#scoreElement')
+const startGameButton = document.querySelector('#startGameButton')
+const modalElement = document.querySelector('#modalElement')
+const bigScoreElement = document.querySelector('#bigScoreElement')
 
 // Propiedades del jugador
 class Player{
@@ -210,7 +213,9 @@ function animate(){
 
         // Game over
         if (distanceGameOver - enemy.radius - player.radius < 1){
-            cancelAnimationFrame(animationId)
+            cancelAnimationFrame(animationId)            
+            modalElement.style.display = 'flex'
+            bigScoreElement.innerHTML = score
         }
 
         projectiles.forEach((projectile, projectileIndex) => {
@@ -280,5 +285,8 @@ addEventListener('click', (event) => {
         )) 
 })
 
-animate()
-spawnEnemies()
+startGameButton.addEventListener('click', () =>{
+    animate()
+    spawnEnemies()
+    modalElement.style.display = 'none'
+})
