@@ -129,14 +129,24 @@ const x = canvas.width / 2
 const y = canvas.height / 2
 
 // Parámetros para el constructor jugador
-const player = new Player(x, y, 15, 'white')
+let player = new Player(x, y, 12, 'white')
 
 // Array para un grupo de proyectiles / enemigos
 // y los recorrerá
 // (múltiples instancias)
-const projectiles = []
-const enemies = []
-const particles = []
+let projectiles = []
+let enemies = []
+let particles = []
+
+function init(){
+    player = new Player(x, y, 12, 'white')
+    projectiles = []
+    enemies = []
+    particles = []
+    score = 0
+    scoreElement.innerHTML = score
+    bigScoreElement.innerHTML = score
+}
 
 // All enemies
 function spawnEnemies() {
@@ -161,9 +171,7 @@ function spawnEnemies() {
   
       // Ángulo desde el centro del canvas al cursor
        const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
-  
-      // const power = 1;
-  
+    
       const velocity = {
         x: Math.cos(angle),
         y: Math.sin(angle)
@@ -175,8 +183,11 @@ function spawnEnemies() {
   
 let animationId
 let score = 0
+//Para optimizar la salida de enemigos en segundo plano
+//let frames = 0
 
 function animate(){
+    //frames++
     animationId = requestAnimationFrame(animate)  
     c.fillStyle = 'rgba(0, 0, 0, 0.1)' 
     // Para evitar llenar el canvas de proyectiles
@@ -285,8 +296,12 @@ addEventListener('click', (event) => {
         )) 
 })
 
+
 startGameButton.addEventListener('click', () =>{
+    init()
     animate()
-    spawnEnemies()
+    //if (frames % 60 === 0) { spawnEnemies() }
     modalElement.style.display = 'none'
 })
+
+spawnEnemies()
