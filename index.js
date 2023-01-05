@@ -5,6 +5,8 @@ const c = canvas.getContext('2d')
 canvas.width = innerWidth
 canvas.height = innerHeight
 
+const scoreElement = document.querySelector('#scoreElement')
+
 // Propiedades del jugador
 class Player{
     constructor(x,y,radius,color){
@@ -169,6 +171,7 @@ function spawnEnemies() {
 }
   
 let animationId
+let score = 0
 
 function animate(){
     animationId = requestAnimationFrame(animate)  
@@ -230,6 +233,9 @@ function animate(){
                 }
 
                 if (enemy.radius - 10 > 5){
+                    // Incrementamos puntuación
+                    score += 100
+                    scoreElement.innerHTML = score   
                     // Animación más soft al golpear al enemigo y bajarle la vida
                     // *librería externa
                     gsap.to(enemy, {
@@ -240,7 +246,9 @@ function animate(){
                             projectiles.splice(projectileIndex, 1)
                         }, 0) 
                 }else{
-                 
+                    // Incrementamos puntuación al matar al enemigo con más puntuación
+                    score += 250
+                    scoreElement.innerHTML = score   
                     setTimeout(() => {
                         // Eliminamos los items colisionados de cada array
                             enemies.splice(enemyIndex, 1)
