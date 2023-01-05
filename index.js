@@ -81,6 +81,44 @@ class Enemy{
     }
 }
 
+const friction = 0.97
+
+// Propiedades del proyectil
+class Particle{
+    constructor(x,y,radius,color, velocity){
+        // Posiciones
+        this.x = x
+        this.y = y
+        // Estilo
+        this.radius = radius
+        this.color = color
+        this.velocity = velocity
+        this.alpha = 1
+    }
+
+    // Imprimir el proyectil
+    draw(){
+        c.save()
+        c.globalAlpha = this.alpha
+        c.beginPath()
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 3, false)
+        c.fillStyle = this.color
+        c.fill()     
+        c.restore()       
+    }
+
+    // Movimiento
+    update(){
+        this.draw()
+        this.velocity.x *= friction
+        this.velocity.y *= friction
+        this.x = this.x + this.velocity.x
+        this.y = this.y + this.velocity.y
+        // Efecto faded en el loop de update para que vaya desapareciendo con el tiempo
+        this.alpha -= 0.01
+    }
+}
+
 // Debemos indicar las coordenadas
 const x = canvas.width / 2
 const y = canvas.height / 2
@@ -93,6 +131,7 @@ const player = new Player(x, y, 15, 'white')
 // (múltiples instancias)
 const projectiles = []
 const enemies = []
+const particles = []
 
 // All enemies
 function spawnEnemies() {
@@ -137,6 +176,15 @@ function animate(){
     // Para evitar llenar el canvas de proyectiles
     c.fillRect(0, 0, canvas.width, canvas.height)    
     player.draw()
+
+    particles.forEach((particle, index) =>  {
+        if(particle.alpha <= 0) {
+            particles.splice(index, 1)
+        }else{
+            particle.update()
+        }
+    })
+
     projectiles.forEach((projectile, index) => {
         projectile.update() 
 
@@ -166,14 +214,41 @@ function animate(){
             // Distancia entre dos puntos
             const distanceHitBox = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
 
-            if (distanceHitBox - enemy.radius - projectile.radius < 1){
-                setTimeout(() => {
-                // Eliminamos los items colisionados de cada array
-                enemies.splice(enemyIndex, 1)
-                projectiles.splice(projectileIndex, 1)
-                }, 0) 
+            // Para evitar que se haga demasiado pequeño al evaluar el tamaño
+            if (distanceHitBox - enemy.radius - projectile.radius < 1){   
+
+                // Crear explosiones
+                for (let index = 0; index < 8; index++) {
+                   particles.push(
+                    new Particle(
+                        projectile.x, 
+                        projectile.y,
+                        Math.random() * 2, 
+                        enemy.color, 
+                        {x: (Math.random() - 0.5) * (Math.random() * 5), 
+                            y: (Math.random() - 0.5) * (Math.random() * 5)}))                    
+                }
+
+                if (enemy.radius - 10 > 5){
+                    // Animación más soft al golpear al enemigo y bajarle la vida
+                    // *librería externa
+                    gsap.to(enemy, {
+                        radius: enemy.radius - 10
+                    })
+                    setTimeout(() => {
+                        // Eliminamos los items colisionados de cada array
+                            projectiles.splice(projectileIndex, 1)
+                        }, 0) 
+                }else{
+                 
+                    setTimeout(() => {
+                        // Eliminamos los items colisionados de cada array
+                            enemies.splice(enemyIndex, 1)
+                            projectiles.splice(projectileIndex, 1)
+                        }, 0) 
+                }
             }
-        })
+        })     
     })
 }
 

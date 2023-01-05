@@ -8,5 +8,5 @@ HTML5 Canvas and JavaScript Game
 - [X] Collision with player and game over
 - [X] Optimization (projectiles rendering)
 - [X] Colorize
-- [ ] Explode enemies on hit
+- [X] Explode enemies on hit
 - [ ] Add score and UI
