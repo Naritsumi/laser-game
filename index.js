@@ -189,7 +189,7 @@ let score = 0
 function animate(){
     //frames++
     animationId = requestAnimationFrame(animate)  
-    c.fillStyle = 'rgba(0, 0, 0, 0.1)' 
+    c.fillStyle = 'rgba(0, 0, 0, 0.3)' 
     // Para evitar llenar el canvas de proyectiles
     c.fillRect(0, 0, canvas.width, canvas.height)    
     player.draw()

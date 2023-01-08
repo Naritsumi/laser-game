@@ -11,4 +11,8 @@ HTML5 Canvas and JavaScript Game
 - [X] Explode enemies on hit
 - [X] Add points and score 
 - [X] UI and restart button
-- [ ] Faded color issue ERROR
+- [X] Faded color issue FIXED
+
+EXTRAS:
+- [ ] Add music
+- [ ] Add powerup
