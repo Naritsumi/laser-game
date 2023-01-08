@@ -1,4 +1,7 @@
 # laser-game
+
+https://laser-game.netlify.app/
+
 HTML5 Canvas and JavaScript Game
 
 - [X] Create player
